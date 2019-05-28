@@ -20,9 +20,13 @@ namespace Ex3.Controllers
         public ActionResult display(string ip, int port)
         {
             CommandConnect.Instance.connect(ip, port);
-            
+            ViewBag.lon = CommandConnect.Instance.getLon();
+            ViewBag.lat = CommandConnect.Instance.getLat();
             return View();
         }
+
+
+
                           
     }
 }

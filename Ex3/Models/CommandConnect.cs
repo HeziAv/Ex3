@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -21,8 +22,19 @@ namespace Ex3.Models
             set;
         }
 
+        public double lon
+        {
+            get;
+            set;
+        }
 
-         private CommandConnect()
+        public double lat
+        {
+            get;
+            set;
+        }
+
+        private CommandConnect()
         {
             isConnect = false;
         }
@@ -43,7 +55,7 @@ namespace Ex3.Models
         }
         #endregion
 
-        TcpClient _client;
+        TcpClient _client = new TcpClient();
         public void disconnect()
         {
             isConnect = false;
@@ -54,31 +66,54 @@ namespace Ex3.Models
         public void connect(string IP,int port)
         {
             IPEndPoint ep1 = new IPEndPoint(IPAddress.Parse(IP), port);
-            _client = new TcpClient();
-            isConnect = true;
-            while (isConnect)
+            while (!_client.Connected)
             {
                 _client.Connect(ep1);
-                Console.WriteLine("Command channel :You are connected");
+                Debug.WriteLine("Command channel :You are connected");
+                isConnect = true;
             }
-            
         }
-       
-        public void sendInfo(string text)
+
+        public string parser(string data)
+        {
+            int startindex = data.IndexOf((char)39);
+            int Endindex = data.LastIndexOf((char)39);
+            string outputstring = data.Substring(startindex + 1, Endindex - startindex - 1);
+            return outputstring;
+        }
+
+        public double sendInfo(string text)
         {
             string[] lines;
             lines = text.Split('\n');
             if (!isConnect)
             {
-                return;
+                return -1;
             }
             NetworkStream ns = _client.GetStream();
             byte[] buffWriter = Encoding.ASCII.GetBytes(lonPath);
             ns.Write(buffWriter, 0, buffWriter.Length);
             System.IO.StreamReader line1 = new System.IO.StreamReader(ns);
             string buffer = line1.ReadLine();
-
+            string par = parser(buffer);
+            double fpar = (float)Convert.ToDouble(par);
+            return fpar;
 
         }
+
+
+        public double getLon()
+        {
+            return sendInfo(lonPath);
+        }
+
+
+        public double getLat()
+        {
+            return sendInfo(latPath);
+        }
+
+
+       
     }
 }

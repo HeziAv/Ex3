@@ -6,19 +6,23 @@
 
 <html>
 <body background="~/Content/export-map-share.png" style="background-size:100% 100%; background-attachment:fixed">
-    <canvas id="myCanvas" style="background-size:100% 100%"></canvas>
+
+    <canvas id="myCanvas" style="background-size:100% 100% "></canvas>
     <script>
-            var lon = ('@ViewBag.lon' + 180) * (canvas.height / 180);
-            var lat = ('@ViewBag.lat' + 90) * (canvas.height / 360);
             var c = document.getElementById("myCanvas");
             var context1 = c.getContext("2d");
+            var lat1 = @ViewBag.lat;
+            var lon1 = @ViewBag.lon;
+        var newlat1 = ((lat1) + 90) * (180/ c.width );
+        var newlon1 = ((lon1) + 180) * (360/c.height);
+
             context1.beginPath();
             context1.lineWidth = 1;
-        context1.arc(lon, lat, 6, 0, 2 * Math.PI);
+        context1.arc(newlon1, newlat1, 6, 0, 2 * Math.PI);
             context1.fillStyle = 'red';
             context1.fill();
             context1.stroke();
-            context1.closePath();
+        context1.closePath();
 
         
     </script>

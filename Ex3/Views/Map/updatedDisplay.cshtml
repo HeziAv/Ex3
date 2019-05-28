@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "updatedDisplay";
+}
+
+
+<html>
+<body background="~/Content/export-map-share.png" style="background-size:100% 100%; background-attachment:fixed">
+
+    <canvas id="myCanvas" style="background-size:100% 100% "></canvas>
+    <script>
+        var c = document.getElementById("myCanvas");
+        var context1 = c.getContext("2d");
+        var IntervalTime = @Session["time"] * 1000
+        alert(IntervalTime);
+        myTimer = (function () {
+        $.post("@Url.Action("getInfoDisplay4")").done(function (xml) {
+            var xmlDoc = $.parseXML( xml ),
+                $xml = $(xmlDoc),
+
+            lon = $xml.find("Lon").text(); 
+            lat = $xml.find("Lat").text();
+            alert(lon);
+
+            lon = parseFloat(lon);
+            lat = parseFloat(lat);
+            context1.beginPath();
+            context1.lineWidth = 1;
+            var newlat1 = ((lat) + 90) * (180 / c.width);
+            var newlon1 = ((lon) + 180) * (360 / c.height);
+            context1.arc(newlon1, newlat1, 6, 0, 2 * Math.PI);
+            context1.fillStyle = 'red';
+            context1.fill();
+            context1.stroke();
+            context1.closePath();                           
+       
+        });
+    });
+
+    setInterval(myTimer, IntervalTime);
+    myTimer();
+    </script>
+
+</body>
+</html>

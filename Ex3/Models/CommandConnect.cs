@@ -16,6 +16,11 @@ namespace Ex3.Models
         const string lonPath = "get /position/longitude-deg\r\n";
         const string latPath = "get /position/latitude-deg\r\n";
 
+        const string rudder = "get /controls/flight/rudder\r\n";
+        const string throttle = "get /controls/engines/current-engine/throttle\r\n";
+        
+
+
         public bool isConnect
         {
             get;
@@ -91,12 +96,12 @@ namespace Ex3.Models
                 return -1;
             }
             NetworkStream ns = _client.GetStream();
-            byte[] buffWriter = Encoding.ASCII.GetBytes(lonPath);
+            byte[] buffWriter = Encoding.ASCII.GetBytes(text);
             ns.Write(buffWriter, 0, buffWriter.Length);
             System.IO.StreamReader line1 = new System.IO.StreamReader(ns);
             string buffer = line1.ReadLine();
             string par = parser(buffer);
-            double fpar = (float)Convert.ToDouble(par);
+            double fpar = Convert.ToDouble(par);
             return fpar;
 
         }

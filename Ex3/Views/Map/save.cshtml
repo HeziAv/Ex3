@@ -1,6 +1,8 @@
-﻿@{
-    ViewBag.Title = "updatedDisplay";
+﻿
+@{
+    ViewBag.Title = "save";
 }
+
 
 <html>
 <body background="~/Content/export-map-share.png" style="background-size:100% 100%; background-attachment:fixed">
@@ -9,22 +11,15 @@
         var c = document.getElementById("myCanvas");
         var context1 = c.getContext("2d");
         var IntervalTime = @Session["time"] * 1000
-        alert(IntervalTime);
-        var lastLon;
-        var lastLat;
-        var flag = 0;
-
-
+        var milliseconds = @Session["timeout"] * 1000
+        alert(milliseconds);
         myTimer = (function () {
-            var hezi = "@Url.Action("getInfoDisplay4")";
-            alert(hezi);
-        $.post("@Url.Action("getInfoDisplay4")").done(function (xml) {
+        $.post("@Url.Action("getInfoDisplay4andsave")").done(function (xml) {
             var xmlDoc = $.parseXML( xml ),
                 $xml = $(xmlDoc),
 
             lon = $xml.find("Lon").text();
             lat = $xml.find("Lat").text();
-            alert(lon);
 
             lon = parseFloat(lon);
             lat = parseFloat(lat);
@@ -56,10 +51,15 @@
                 context1.closePath();
             }
         });
-    });
+        });
+        stop = (function () {
+            clearInterval(interval)
+             alert("Done!");
 
-    setInterval(myTimer, IntervalTime);
-    myTimer();
+        });
+        setTimeout(stop, milliseconds);
+        var interval = setInterval(myTimer, IntervalTime);
+        myTimer();
     </script>
 </body>
 </html>

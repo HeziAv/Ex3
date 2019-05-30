@@ -16,8 +16,8 @@ namespace Ex3.Models
         const string lonPath = "get /position/longitude-deg\r\n";
         const string latPath = "get /position/latitude-deg\r\n";
 
-        const string rudder = "get /controls/flight/rudder\r\n";
-        const string throttle = "get /controls/engines/current-engine/throttle\r\n";
+        const string rudderPath = "get /controls/flight/rudder\r\n";
+        const string throttlePath = "get /controls/engines/current-engine/throttle\r\n";
         
 
 
@@ -38,6 +38,19 @@ namespace Ex3.Models
             get;
             set;
         }
+
+        public double rudder
+        {
+            get;
+            set;
+        }
+
+        public double throttle
+        {
+            get;
+            set;
+        }
+
 
         private CommandConnect()
         {
@@ -118,7 +131,17 @@ namespace Ex3.Models
             return sendInfo(latPath);
         }
 
+        public double getRudder()
+        {
+            return sendInfo(rudderPath);
+        }
 
-       
+        public double getthrottle()
+        {
+            return sendInfo(throttlePath);
+        }
+
+
+
     }
 }

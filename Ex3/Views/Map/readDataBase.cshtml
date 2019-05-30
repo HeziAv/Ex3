@@ -1,0 +1,82 @@
+﻿
+@{
+    ViewBag.Title = "readDataBase";
+}
+
+<html>
+<body background="~/Content/export-map-share.png" style="background-size:100% 100%; background-attachment:fixed; width:100%; height:100%; overflow: hidden;">
+    <canvas id="myCanvas" style="position:absolute"></canvas>
+    <script>
+        myCanvas.setAttribute('width', window.innerWidth)
+        myCanvas.setAttribute('height', window.innerHeight)
+
+        var c = document.getElementById("myCanvas");
+        var context1 = c.getContext("2d");
+        var IntervalTime = @Session["time"] * 1000
+        alert(IntervalTime);
+        var lastLon;
+        var lastLat;
+        var flag = 0;
+
+        myTimer = (function () {
+            if (flag != 3){
+        $.post("@Url.Action("readDataBase4")").done(function (xml) {
+                    var xmlDoc = $.parseXML(xml),
+                        $xml = $(xmlDoc),
+                        lon = $xml.find("Lon").text();
+                    lat = $xml.find("Lat").text();
+                    numLines = $xml.find("NumOfLines").text();
+
+
+                    lon = parseFloat(lon);
+                    lat = parseFloat(lat);
+
+                    var newlat1 = ((lat) + 90) * (180/ c.width);
+                    var newlon1 = ((lon) + 180) * (360/c.height);
+
+                    //alert(lon);
+                    //alert(lan);
+                    //alert(newlon1);
+                    //alert(newlat1);
+
+                    if ((lat == -1000) || (lat == -1000)) {
+                        flag = 3;
+                        alert("Done Mission");
+                        clearInterval(interval);
+                       
+                    } else {
+                        if (flag == 0) {
+                            flag = 1;
+                            context1.beginPath();
+                            context1.lineWidth = 1;
+                            context1.arc(newlon1, newlat1, 6, 0, 2 * Math.PI);
+                            context1.fillStyle = 'red';
+                            context1.fill();
+                            context1.stroke();
+                            context1.closePath();
+                            lastLat = newlat1;
+                            lastLon = newlon1;
+
+                        } else if (flag == 1) {
+                            
+                            context1.beginPath();
+                            context1.lineWidth = 1;
+                            context1.moveTo(lastLon, lastLat);
+                            context1.lineTo(newlon1, newlat1);
+                            lastLat = newlat1;
+                            lastLon = newlon1;
+                            context1.strokeStyle = "red";
+                            context1.stroke();
+                            context1.closePath();
+                        }
+                    }
+
+                });
+        }
+    });
+
+    setInterval(myTimer, IntervalTime);
+    myTimer();
+    </script>
+</body>
+</html>

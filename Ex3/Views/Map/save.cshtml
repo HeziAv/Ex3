@@ -5,11 +5,19 @@
 
 
 <html>
-<body background="~/Content/export-map-share.png" style="background-size:100% 100%; background-attachment:fixed">
-    <canvas id="myCanvas" style="background-size:100% 100% "></canvas>
+<body background="~/Content/export-map-share.png" style="background-size:100% 100%; background-attachment:fixed; width:100%; height:100%; overflow: hidden;">
+    <canvas id="myCanvas" style="position:absolute"></canvas>
     <script>
+        myCanvas.setAttribute('width', window.innerWidth)
+        myCanvas.setAttribute('height', window.innerHeight)
+        var dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
         var c = document.getElementById("myCanvas");
         var context1 = c.getContext("2d");
+
+        c.width = dimension[0];
+        c.height = dimension[1];
+
+
         var IntervalTime = @Session["time"] * 1000
         var milliseconds = @Session["timeout"] * 1000
         alert(milliseconds);
@@ -24,8 +32,8 @@
             lon = parseFloat(lon);
             lat = parseFloat(lat);
 
-            var newlat1 = ((lat) + 90) * (180 / c.width);
-            var newlon1 = ((lon) + 180) * (360 / c.height);
+            var newlon1 = Math.abs((c.width / 360) * (lon + 180));;
+            var newlat1 = Math.abs((c.height / 180) * (lat - 90));
 
             if (flag == 0) {
                 flag = 1;

@@ -23,12 +23,13 @@ namespace Ex3.Controllers
         }
 
 
+        // check if the url for mission 1 or mission 4
         [HttpGet]
         public ActionResult Mdisplay(string ip, int port)
         {
             try
             {
-                IPAddress.Parse(ip);
+                IPAddress.Parse(ip); // try to pare the first argument
                 return display(ip, port);
             }
             catch (Exception)
@@ -38,18 +39,21 @@ namespace Ex3.Controllers
 
         }
 
-
+        // mission 1 - get lon and lat and send to the view for presntion
         [HttpGet]
         public ActionResult display(string ip, int port) 
         {
             CommandConnect.Instance.connect(ip, port);
                       
-            ViewBag.lat = CommandConnect.Instance.getLat();
-            ViewBag.lon = CommandConnect.Instance.getLon();
-               
+            ViewBag.lat = CommandConnect.Instance.getLat(); // send request for get lat
+            ViewBag.lon = CommandConnect.Instance.getLon(); // send request for get lon
+
             return View("display");
         }
 
+
+
+        
         [HttpGet]
         public ActionResult save(string ip, int port, int second,int time,string file)
         {

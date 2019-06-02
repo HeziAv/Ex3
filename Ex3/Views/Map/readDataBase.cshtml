@@ -7,16 +7,20 @@
 <body background="~/Content/export-map-share.png" style="background-size:100% 100%; background-attachment:fixed; width:100%; height:100%; overflow: hidden;">
     <canvas id="myCanvas" style="position:absolute"></canvas>
     <script>
+
         myCanvas.setAttribute('width', window.innerWidth)
         myCanvas.setAttribute('height', window.innerHeight)
-
+        var dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
         var c = document.getElementById("myCanvas");
+        c.width = dimension[0];
+        c.height = dimension[1];
         var context1 = c.getContext("2d");
         var IntervalTime = @Session["time"] * 1000
         alert(IntervalTime);
         var lastLon;
         var lastLat;
         var flag = 0;
+
 
         myTimer = (function () {
             if (flag != 3){
@@ -31,8 +35,8 @@
                     lon = parseFloat(lon);
                     lat = parseFloat(lat);
 
-                    var newlat1 = ((lat) + 90) * (180/ c.width);
-                    var newlon1 = ((lon) + 180) * (360/c.height);
+                   var newlon1 = Math.abs((c.width / 360) * (lon + 180));;
+                   var newlat1 = Math.abs((c.height / 180) * (lat - 90));
 
                     //alert(lon);
                     //alert(lan);
@@ -43,7 +47,7 @@
                         flag = 3;
                         alert("Done Mission");
                         clearInterval(interval);
-                       
+
                     } else {
                         if (flag == 0) {
                             flag = 1;
@@ -58,7 +62,7 @@
                             lastLon = newlon1;
 
                         } else if (flag == 1) {
-                            
+
                             context1.beginPath();
                             context1.lineWidth = 1;
                             context1.moveTo(lastLon, lastLat);
